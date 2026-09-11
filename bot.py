@@ -654,6 +654,13 @@ def run_bot():
         f"Mode: {'TESTNET' if TESTNET else 'LIVE'}\n"
         f"Symbol: {SYMBOL}\n"
         f"RSI Broadcasts: Every 5 mins"
+        "Commands:\n"
+        "• /start — Enable trading\n"
+        "• /stop — Pause new trades\n"
+        "• /status — Bot status\n"
+        "• /balance — Check wallet balance\n"
+
+        "• /help — List commands"
     )
 
     while True:
