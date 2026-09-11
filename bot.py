@@ -653,7 +653,7 @@ def run_bot():
         "🤖 Binance Trading Bot Online\n\n"
         f"Mode: {'TESTNET' if TESTNET else 'LIVE'}\n"
         f"Symbol: {SYMBOL}\n"
-        f"RSI Broadcasts: Every 5 mins"
+        f"RSI Broadcasts: Every 5 mins\n"
         "Commands:\n"
         "• /start — Enable trading\n"
         "• /stop — Pause new trades\n"
