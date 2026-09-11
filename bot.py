@@ -640,7 +640,59 @@ def trade_logic():
 # MAIN LOOP
 # =========================================================
 
+# Separate background worker to continuously listen for Telegram commands
+def telegram_listener():
+    while True:
+        try:
+            check_telegram()
+            time.sleep(1)  # Checks Telegram every second
+        except Exception as e:
+            print("Telegram listener error:", e)
+            time.sleep(3)
+
 def run_bot():
+    global last_rsi_broadcast
+    last_rsi_broadcast = time.time()
+
+    print("================================")
+    print(" Binance Telegram Trading Bot")
+    print("================================")
+    print(f"Symbol: {SYMBOL} | Mode: {'TESTNET' if TESTNET else 'LIVE'}")
+
+    send_telegram(
+        "Binance Trading Bot\n\n"
+        f"Mode: {'TESTNET' if TESTNET else 'LIVE'}\n"
+        f"Symbol: {SYMBOL}\n"
+        f"RSI Broadcasts: Every 5 mins\n\n"
+       
+    )
+
+    # Start Telegram command processing in a dedicated background thread
+    threading.Thread(target=telegram_listener, daemon=True).start()
+
+    # Main strategy & position monitoring loop
+    while True:
+        try:
+            if in_position:
+                try:
+                    price = float(client.get_symbol_ticker(symbol=SYMBOL)["price"])
+                    manage_position(price)
+                except Exception as e:
+                    print("Position monitoring error:", e)
+
+            if bot_running:
+                trade_logic()
+
+            time.sleep(5)
+
+        except KeyboardInterrupt:
+            print("Bot stopped manually.")
+            send_telegram("🛑 Bot stopped from computer.")
+            break
+
+        except Exception as e:
+            print("MAIN LOOP ERROR:", e)
+            time.sleep(5)
     global last_rsi_broadcast
     last_rsi_broadcast = time.time()
 
