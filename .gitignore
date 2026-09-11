@@ -1,0 +1,15 @@
+# Environment & Secrets (Crucial)
+.env
+*.env
+
+# Python Cache & Executables
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+
+# IDE / Editor folders
+.vscode/
+.idea/

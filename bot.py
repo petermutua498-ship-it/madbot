@@ -8,6 +8,11 @@ from binance.client import Client
 from binance.exceptions import BinanceAPIException, BinanceRequestException
 from requests.exceptions import RequestException
 
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+
+
 
 # =========================================================
 # CONFIGURATION
@@ -40,6 +45,22 @@ COOLDOWN_CANDLES = 2
 
 # Telegram periodic update settings (in seconds)
 RSI_BROADCAST_INTERVAL = 300  # 5 minutes
+
+# Light HTTP server to satisfy Render's free Web Service checks
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        self.wfile.write(b"Bot is active!")
+
+def start_health_check_server():
+    port = int(os.environ.get("PORT", 10000))
+    server = HTTPServer(("0.0.0.0", port), HealthCheckHandler)
+    server.serve_forever()
+
+# Start dummy web server in a daemon thread
+threading.Thread(target=start_health_check_server, daemon=True).start()
 
 
 # =========================================================
