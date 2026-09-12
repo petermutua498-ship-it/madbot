@@ -11,9 +11,6 @@ from requests.exceptions import RequestException
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
-
-
-
 # =========================================================
 # CONFIGURATION
 # =========================================================
@@ -739,6 +736,20 @@ def run_bot():
             print("MAIN LOOP ERROR:", e)
             time.sleep(5)
 
+RENDER_APP_URL = "https://pinpbot.onrender.com"  # Replace with your actual Render URL
+
+def keep_alive():
+    """Pings itself every 10 minutes to prevent Render free instance from sleeping."""
+    while True:
+        try:
+            time.sleep(600)  # Wait 10 minutes (600 seconds)
+            response = requests.get(RENDER_APP_URL, timeout=10)
+            print(f"Self-ping successful: Status {response.status_code}")
+        except Exception as e:
+            print(f"Self-ping failed: {e}")
+
+# Start self-ping thread
+threading.Thread(target=keep_alive, daemon=True).start()
 
 if __name__ == "__main__":
     run_bot()
