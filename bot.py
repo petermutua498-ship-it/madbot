@@ -693,8 +693,7 @@ def run_bot():
         except Exception as e:
             print("MAIN LOOP ERROR:", e)
             time.sleep(5)
-    global last_rsi_broadcast
-    last_rsi_broadcast = time.time()
+    
 
     print("================================")
     print(" Binance Telegram Trading Bot")
